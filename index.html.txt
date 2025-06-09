@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ayurveda Dosha Quiz</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .question { margin-bottom: 20px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <h1>Find Your Dosha</h1>
+  <div id="quiz"></div>
+  <button onclick="submitQuiz()">Submit</button>
+  <div id="result" class="hidden"></div>
+
+  <script>
+    const quizData = [
+      {
+        question: "How would you describe your body frame?",
+        options: [
+          { text: "Thin and lanky", dosha: "Vata" },
+          { text: "Athletic and muscular", dosha: "Pitta" },
+          { text: "Heavy and solid", dosha: "Kapha" }
+        ]
+      },
+      {
+        question: "What is your reaction to stress?",
+        options: [
+          { text: "Worry a lot", dosha: "Vata" },
+          { text: "Get angry", dosha: "Pitta" },
+          { text: "Withdraw and sleep", dosha: "Kapha" }
+        ]
+      }
+    ];
+
+    const quizContainer = document.getElementById("quiz");
+
+    quizData.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.classList.add("question");
+      div.innerHTML = `<p>${q.question}</p>`;
+      q.options.forEach((opt, j) => {
+        div.innerHTML += `
+          <label>
+            <input type="radio" name="q${i}" value="${opt.dosha}"> ${opt.text}
+          </label><br/>
+        `;
+      });
+      quizContainer.appendChild(div);
+    });
+
+    function submitQuiz() {
+      const doshaCount = { Vata: 0, Pitta: 0, Kapha: 0 };
+      quizData.forEach((_, i) => {
+        const answer = document.querySelector(`input[name="q${i}"]:checked`);
+        if (answer) {
+          doshaCount[answer.value]++;
+        }
+      });
+
+      const result = Object.entries(doshaCount).reduce((a, b) => a[1] > b[1] ? a : b);
+      document.getElementById("result").textContent = `Your dominant dosha is: ${result[0]}`;
+      document.getElementById("result").classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>
